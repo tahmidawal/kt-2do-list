@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>K &amp; T 2do list</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💛</text></svg>" />
+</head>
+<body>
+  <div class="backdrop no-photo" id="backdrop"></div>
+  <div class="scrim"></div>
+
+  <div class="lock hidden" id="lock">
+    <form class="card lock-card" id="lockForm">
+      <h1>K &amp; T</h1>
+      <p class="hint">Just for the two of you.</p>
+      <input type="password" id="lockPassword" placeholder="Password"
+             autocomplete="current-password" spellcheck="false" required />
+      <button type="submit" class="primary" id="lockBtn">Come in</button>
+      <p class="lock-error hidden" id="lockError"></p>
+    </form>
+  </div>
+
+  <main class="page" id="page">
+    <header class="masthead">
+      <div class="titles">
+        <h1>K &amp; T</h1>
+        <p class="subtitle">things we said we'd do</p>
+      </div>
+      <label class="frame" title="Click to use your own photo">
+        <input type="file" id="bgInput" accept="image/jpeg,image/png,image/webp" hidden />
+        <img id="portrait" alt="Katherine and Tahmid" hidden />
+        <span class="frame-empty" id="frameEmpty">add<br />your photo</span>
+        <span class="frame-hint">change</span>
+      </label>
+    </header>
+
+    <div class="banner hidden" id="banner"></div>
+
+    <!-- ------------------------------------------------ add ------------- -->
+    <section class="card">
+      <h2>Add something</h2>
+      <p class="hint">Write it however you'd say it. You can put a few things in at once.</p>
+      <form id="addForm">
+        <textarea id="ideaText" rows="2"
+          placeholder="that ramen place on Queen, and the botanical garden sometime"></textarea>
+        <button type="submit" class="primary" id="addBtn">Add to the list</button>
+      </form>
+    </section>
+
+    <!-- ------------------------------------------------ plan ------------ -->
+    <section class="card">
+      <h2>What should we do?</h2>
+      <p class="hint">Where you both are right now, and how long you've got.</p>
+      <form id="planForm">
+        <div class="field-row">
+          <label class="field">
+            <span>Katherine is at</span>
+            <input type="text" id="katherineLoc" placeholder="city, address, or postcode" required />
+          </label>
+          <label class="field">
+            <span>Tahmid is at</span>
+            <input type="text" id="tahmidLoc" placeholder="city, address, or postcode" required />
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Time we have, door to door</span>
+            <select id="available">
+              <option value="">No limit</option>
+              <option value="60">1 hour</option>
+              <option value="120">2 hours</option>
+              <option value="180">3 hours</option>
+              <option value="240">4 hours</option>
+              <option value="360">6 hours</option>
+              <option value="480">The whole day</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>When</span>
+            <input type="datetime-local" id="when" />
+          </label>
+        </div>
+        <button type="submit" class="primary" id="planBtn">Pick something for us</button>
+      </form>
+      <div id="planResult"></div>
+    </section>
+
+    <!-- ------------------------------------------------ list ------------ -->
+    <section class="card">
+      <div class="list-head">
+        <h2>The list</h2>
+        <label class="toggle">
+          <input type="checkbox" id="showDone" />
+          <span>Show done</span>
+        </label>
+      </div>
+      <div id="list" class="list"></div>
+    </section>
+
+    <footer class="foot">Made for Katherine &amp; Tahmid 💛</footer>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Start the K & T 2do list. Open the URL it prints.
+set -euo pipefail
+
+cd "$(dirname "$0")"
+
+if [ ! -d .venv ]; then
+  echo "Setting things up for the first time..."
+  python3 -m venv .venv
+  .venv/bin/pip install --quiet --upgrade pip
+  .venv/bin/pip install --quiet -r requirements.txt
+fi
+
+if [ ! -f .env ]; then
+  echo
+  echo "  Heads up: there's no .env file yet, so the AI bits won't work."
+  echo "  Copy .env.example to .env and paste your Gemini API key in."
+  echo
+fi
+
+PORT="${PORT:-8420}"
+echo
+echo "  K & T 2do list  ->  http://localhost:${PORT}"
+echo
+
+exec .venv/bin/uvicorn backend.app:app --host 127.0.0.1 --port "${PORT}"
