@@ -43,8 +43,18 @@
       <h2>Add something</h2>
       <p class="hint">Write it however you'd say it. You can put a few things in at once.</p>
       <form id="addForm">
-        <textarea id="ideaText" rows="2"
-          placeholder="that ramen place on Queen, and the botanical garden sometime"></textarea>
+        <div class="speak-wrap">
+          <textarea id="ideaText" rows="2"
+            placeholder="that ramen place on Queen, and the botanical garden sometime"></textarea>
+          <button type="button" class="mic" id="micBtn" title="Say it out loud instead" hidden>
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="2" width="6" height="12" rx="3"></rect>
+              <path d="M5 10v1a7 7 0 0 0 14 0v-1"></path>
+              <line x1="12" y1="18" x2="12" y2="22"></line>
+            </svg>
+          </button>
+        </div>
         <button type="submit" class="primary" id="addBtn">Add to the list</button>
       </form>
     </section>

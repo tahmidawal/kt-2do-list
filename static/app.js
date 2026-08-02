@@ -11,6 +11,7 @@ const el = {
   addForm: $("addForm"),
   ideaText: $("ideaText"),
   addBtn: $("addBtn"),
+  micBtn: $("micBtn"),
   planForm: $("planForm"),
   katherineLoc: $("katherineLoc"),
   tahmidLoc: $("tahmidLoc"),
@@ -208,6 +209,71 @@ el.addForm.addEventListener("submit", async (event) => {
     el.addBtn.textContent = "Add to the list";
   }
 });
+
+/* ------------------------------------------------------------ dictation */
+
+// Chrome, Edge, and Safari (including iPhones) ship speech recognition under
+// the webkit prefix; Firefox has neither, so the button only appears when it
+// will actually work.
+const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (Speech) {
+  el.micBtn.hidden = false;
+
+  const recognizer = new Speech();
+  recognizer.lang = navigator.language || "en-US";
+  recognizer.continuous = true;
+  recognizer.interimResults = true;
+
+  let listening = false;
+  let base = ""; // whatever was typed before the mic came on
+  let finals = "";
+
+  recognizer.onresult = (event) => {
+    let interim = "";
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const transcript = event.results[i][0].transcript;
+      if (event.results[i].isFinal) finals += transcript;
+      else interim += transcript;
+    }
+    el.ideaText.value = (base + finals + interim).trimStart();
+  };
+
+  recognizer.onerror = (event) => {
+    if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+      say("The browser needs microphone permission for this — check the icon in the address bar.", true);
+    } else if (event.error !== "no-speech" && event.error !== "aborted") {
+      say("Couldn't hear that — try again?", true);
+    }
+  };
+
+  // Fires both when we stop it and when the browser gives up on its own
+  // (silence timeout, tab switch), so the button state lives here.
+  recognizer.onend = () => {
+    listening = false;
+    el.micBtn.classList.remove("listening");
+    el.micBtn.title = "Say it out loud instead";
+    el.ideaText.value = (base + finals).trimStart();
+  };
+
+  el.micBtn.addEventListener("click", () => {
+    if (listening) {
+      recognizer.stop();
+      return;
+    }
+    base = el.ideaText.value ? el.ideaText.value.replace(/\s*$/, " ") : "";
+    finals = "";
+    try {
+      recognizer.start();
+    } catch {
+      return; // double-tap while it was already winding down
+    }
+    listening = true;
+    el.micBtn.classList.add("listening");
+    el.micBtn.title = "Done talking";
+    el.ideaText.focus();
+  });
+}
 
 /* ------------------------------------------------------------ plan */
 

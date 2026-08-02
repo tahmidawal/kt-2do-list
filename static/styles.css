@@ -278,6 +278,43 @@ textarea:focus, input:focus, select:focus {
 select { appearance: none; cursor: pointer; }
 select option { background: #2b2626; color: var(--cream); }
 
+/* Mic button lives inside the idea box, out of the way of the text. */
+
+.speak-wrap { position: relative; }
+.speak-wrap textarea { padding-right: 54px; }
+
+.mic {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--glass-line);
+  background: rgba(244, 230, 214, 0.08);
+  color: var(--cream-soft);
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+
+.mic:hover { background: rgba(244, 230, 214, 0.16); color: var(--cream); }
+
+.mic.listening {
+  background: var(--terracotta);
+  border-color: transparent;
+  color: #2a1a12;
+  animation: mic-pulse 1.6s ease infinite;
+}
+
+@keyframes mic-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(193, 140, 118, 0.45); }
+  70% { box-shadow: 0 0 0 12px rgba(193, 140, 118, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(193, 140, 118, 0); }
+}
+
 .field-row {
   display: flex;
   gap: 12px;
