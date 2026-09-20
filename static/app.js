@@ -487,159 +487,333 @@ async function boot() {
   const poodle = $("puppyPoodle");
   if (!golden || !poodle) return;
 
-  const WIDTH = 124;
-  const HEIGHT = 90;
-
-  const pack = [
-    { el: golden, x: 24, y: 0, destX: 24, destY: 0, wait: 0, mood: "wander", moodUntil: 0 },
-    { el: poodle, x: 220, y: 0, destX: 220, destY: 0, wait: 400, mood: "wander", moodUntil: 0 },
-  ];
-
-  function bounds() {
+  function view() {
+    const port = window.visualViewport;
     return {
-      w: Math.max(160, window.innerWidth),
-      h: Math.max(160, window.innerHeight),
+      w: Math.max(180, port ? port.width : window.innerWidth),
+      h: Math.max(180, port ? port.height : window.innerHeight),
+      left: port ? port.offsetLeft : 0,
+      top: port ? port.offsetTop : 0,
     };
   }
 
-  function clamp(dog) {
-    const { w, h } = bounds();
-    dog.x = Math.min(Math.max(8, dog.x), w - WIDTH - 8);
-    dog.y = Math.min(Math.max(8, dog.y), h - HEIGHT - 8);
+  function size() {
+    return {
+      w: golden.offsetWidth || (view().w <= 520 ? 96 : 132),
+      h: golden.offsetHeight || (view().w <= 520 ? 70 : 96),
+    };
+  }
+
+  function isPhone() {
+    return view().w <= 520;
+  }
+
+  function pad() {
+    const phone = isPhone();
+    return { x: phone ? 6 : 10, y: phone ? 8 : 10 };
+  }
+
+  const pack = [
+    makeDog(golden, 1),
+    makeDog(poodle, -1),
+  ];
+
+  function makeDog(el, facing) {
+    return {
+      el,
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      destX: 0,
+      destY: 0,
+      arc: 0,
+      trip: 1,
+      startX: 0,
+      startY: 0,
+      facing,
+      lean: 0,
+      hop: 0,
+      hopV: 0,
+      wait: 0,
+      mood: "wander",
+      moodUntil: 0,
+      orbit: Math.random() * Math.PI * 2,
+    };
+  }
+
+  function clampToYard(x, y) {
+    const { w, h } = view();
+    const { w: W, h: H } = size();
+    const p = pad();
+    return {
+      x: Math.min(Math.max(p.x, x), Math.max(p.x, w - W - p.x)),
+      y: Math.min(Math.max(p.y, y), Math.max(p.y, h - H - p.y)),
+    };
+  }
+
+  function clampDog(dog) {
+    const next = clampToYard(dog.x, dog.y);
+    dog.x = next.x;
+    dog.y = next.y;
   }
 
   function pickSpot(dog, toward) {
-    const { w, h } = bounds();
-    if (toward) {
-      dog.destX = toward.x + (Math.random() * 70 - 35);
-      dog.destY = toward.y + (Math.random() * 36 - 18);
-      clampDest(dog);
-      return;
-    }
-    const roll = Math.random();
-    if (roll < 0.6) {
-      dog.destX = 10 + Math.random() * (w - WIDTH - 20);
-      dog.destY = h - HEIGHT - 10 - Math.random() * Math.min(260, h * 0.42);
-    } else if (roll < 0.82) {
-      dog.destX = Math.random() < 0.5 ? 10 : w - WIDTH - 10;
-      dog.destY = 64 + Math.random() * (h - HEIGHT - 80);
-    } else {
-      dog.destX = 10 + Math.random() * (w - WIDTH - 20);
-      dog.destY = 48 + Math.random() * (h - HEIGHT - 64);
-    }
-    clampDest(dog);
-  }
+    const { w, h } = view();
+    const { w: W, h: H } = size();
+    const phone = isPhone();
+    dog.startX = dog.x;
+    dog.startY = dog.y;
+    dog.trip = 1;
+    dog.arc = (Math.random() * 2 - 1) * (phone ? 28 : 48);
 
-  function clampDest(dog) {
-    const { w, h } = bounds();
-    dog.destX = Math.min(Math.max(8, dog.destX), w - WIDTH - 8);
-    dog.destY = Math.min(Math.max(8, dog.destY), h - HEIGHT - 8);
+    if (toward) {
+      dog.destX = toward.x + (Math.random() * 56 - 28);
+      dog.destY = toward.y + (Math.random() * 28 - 14);
+    } else {
+      const roll = Math.random();
+      const floor = h - H - pad().y;
+      if (phone || roll < 0.62) {
+        dog.destX = pad().x + Math.random() * Math.max(8, w - W - pad().x * 2);
+        dog.destY = floor - Math.random() * Math.min(phone ? h * 0.38 : 240, h * 0.4);
+      } else if (roll < 0.84) {
+        dog.destX = Math.random() < 0.5 ? pad().x : w - W - pad().x;
+        dog.destY = 56 + Math.random() * Math.max(8, h - H - 72);
+      } else {
+        dog.destX = pad().x + Math.random() * Math.max(8, w - W - pad().x * 2);
+        dog.destY = 40 + Math.random() * Math.max(8, h - H - 56);
+      }
+    }
+
+    const dest = clampToYard(dog.destX, dog.destY);
+    dog.destX = dest.x;
+    dog.destY = dest.y;
+    const span = Math.hypot(dog.destX - dog.startX, dog.destY - dog.startY);
+    dog.trip = Math.max(40, span);
   }
 
   function dist(a, b) {
-    const dx = a.x - b.x;
-    const dy = a.y - b.y;
-    return Math.hypot(dx, dy);
+    return Math.hypot(a.x - b.x, a.y - b.y);
   }
 
   function setMood(dog, mood, duration) {
     dog.mood = mood;
     dog.moodUntil = performance.now() + duration;
-    dog.el.classList.toggle("is-playing", mood === "play");
+    const playing = mood === "play";
+    const excited = playing || mood === "chase" || mood === "zoomies" || mood === "circle" || mood === "bow";
+    dog.el.classList.toggle("is-playing", playing);
     dog.el.classList.toggle("is-bowing", mood === "bow");
-    dog.el.classList.toggle("is-spinning", mood === "spin");
+    dog.el.classList.toggle("is-sitting", mood === "sit");
+    dog.el.classList.toggle("is-sniffing", mood === "sniff");
+    dog.el.classList.toggle("is-circling", mood === "circle");
+    dog.el.classList.toggle("is-excited", excited);
   }
 
   function chooseFun(now) {
     const [a, b] = pack;
     if (a.mood !== "wander" || b.mood !== "wander") return;
-    const together = dist(a, b) < 110;
+
+    const close = dist(a, b) < (isPhone() ? 88 : 120);
     const roll = Math.random();
-    if (together && roll < 0.55) {
-      const game = roll < 0.22 ? "spin" : roll < 0.38 ? "bow" : "play";
-      setMood(a, game, 1400 + Math.random() * 900);
-      setMood(b, game === "bow" ? "play" : game, 1400 + Math.random() * 900);
+
+    if (close && roll < 0.72) {
+      if (roll < 0.22) {
+        setMood(a, "bow", 1600);
+        setMood(b, "sit", 1600);
+      } else if (roll < 0.4) {
+        setMood(a, "sit", 1800);
+        setMood(b, "sit", 1800);
+      } else if (roll < 0.55) {
+        a.orbit = 0;
+        b.orbit = Math.PI;
+        setMood(a, "circle", 2400);
+        setMood(b, "circle", 2400);
+      } else {
+        setMood(a, "play", 1700);
+        setMood(b, "play", 1700);
+      }
       return;
     }
-    if (roll < 0.18) {
+
+    if (roll < 0.34) {
       const chaser = Math.random() < 0.5 ? a : b;
-      const chasee = chaser === a ? b : a;
-      setMood(chaser, "chase", 2200);
-      pickSpot(chaser, chasee);
-    } else if (roll < 0.28) {
+      setMood(chaser, "chase", 2600);
+      pickSpot(chaser, chaser === a ? b : a);
+    } else if (roll < 0.46) {
       pack.forEach((dog) => {
-        setMood(dog, "zoomies", 1600);
+        setMood(dog, "zoomies", 1500);
         pickSpot(dog);
       });
+    } else if (roll < 0.58) {
+      const sniffer = Math.random() < 0.5 ? a : b;
+      setMood(sniffer, "sniff", 1100);
     }
   }
 
-  function speedFor(dog) {
-    if (dog.mood === "zoomies") return 280;
-    if (dog.mood === "chase") return 190;
-    return 110;
+  function maxSpeed(dog) {
+    const phone = isPhone();
+    if (dog.mood === "zoomies") return phone ? 210 : 260;
+    if (dog.mood === "chase" || dog.mood === "circle") return phone ? 150 : 180;
+    if (dog.mood === "play") return phone ? 70 : 90;
+    return phone ? 78 : 96;
+  }
+
+  function steer(dog, aimX, aimY, dt) {
+    const dx = aimX - dog.x;
+    const dy = aimY - dog.y;
+    const away = Math.hypot(dx, dy);
+    const slow = isPhone() ? 64 : 86;
+    const top = maxSpeed(dog);
+    const want = away < 6 ? 0 : top * Math.min(1, away / slow);
+    const nx = away > 0.001 ? dx / away : 0;
+    const ny = away > 0.001 ? dy / away : 0;
+    const accel = dog.mood === "zoomies" ? 7.5 : 4.2;
+    dog.vx += (nx * want - dog.vx) * Math.min(1, accel * dt);
+    dog.vy += (ny * want - dog.vy) * Math.min(1, accel * dt);
+    dog.x += dog.vx * dt;
+    dog.y += dog.vy * dt;
+    return away;
+  }
+
+  function aimPoint(dog) {
+    const dx = dog.destX - dog.startX;
+    const dy = dog.destY - dog.startY;
+    const remaining = Math.hypot(dog.destX - dog.x, dog.destY - dog.y);
+    const done = 1 - Math.min(1, remaining / dog.trip);
+    const lift = Math.sin(Math.max(0, done) * Math.PI) * dog.arc;
+    const len = Math.hypot(dx, dy) || 1;
+    return {
+      x: dog.destX - (dy / len) * lift,
+      y: dog.destY + (dx / len) * lift,
+    };
   }
 
   pack.forEach((dog, index) => {
-    const { h, w } = bounds();
-    dog.y = h - HEIGHT - 18;
-    dog.x = index === 0 ? 28 : Math.max(28, w - WIDTH - 48);
+    const { w, h } = view();
+    const { w: W, h: H } = size();
+    dog.y = h - H - pad().y - 6;
+    dog.x = index === 0 ? pad().x + 12 : Math.max(pad().x + 12, w - W - pad().x - 18);
     dog.destX = dog.x;
     dog.destY = dog.y;
-    pickSpot(dog);
+    pickSpot(dog, pack[1 - index]);
   });
 
   let last = performance.now();
   let nextIdea = 0;
+  let raf = 0;
 
   function tick(now) {
-    const dt = Math.min(0.05, (now - last) / 1000);
+    const dt = Math.min(0.04, (now - last) / 1000);
     last = now;
+    const phone = isPhone();
+    const { w: W } = size();
 
     if (now > nextIdea) {
       chooseFun(now);
-      nextIdea = now + 900 + Math.random() * 1400;
+      nextIdea = now + (phone ? 1100 : 900) + Math.random() * 1200;
     }
 
+    const midX = (pack[0].x + pack[1].x) / 2;
+    const midY = (pack[0].y + pack[1].y) / 2;
+
     pack.forEach((dog, index) => {
+      const other = pack[1 - index];
       if (now > dog.moodUntil && dog.mood !== "wander") {
         setMood(dog, "wander", 0);
-        pickSpot(dog);
+        pickSpot(dog, Math.random() < 0.55 ? other : null);
       }
 
-      if (dog.mood === "chase") {
-        pickSpot(dog, pack[1 - index]);
-      }
+      const posed = dog.mood === "bow" || dog.mood === "sit" || dog.mood === "sniff";
+      let moving = false;
 
-      const dx = dog.destX - dog.x;
-      const dy = dog.destY - dog.y;
-      const away = Math.hypot(dx, dy);
-      const paused = dog.mood === "bow" || dog.mood === "spin" || dog.mood === "play";
-      const moving = away > 4 && !paused;
-
-      if (!moving) {
-        dog.wait -= dt * 1000;
-        if (dog.wait <= 0 && dog.mood === "wander") {
-          pickSpot(dog, Math.random() < 0.28 ? pack[1 - index] : null);
-          dog.wait = 280 + Math.random() * 900;
+      if (dog.mood === "circle") {
+        dog.orbit += dt * (phone ? 1.7 : 1.45);
+        const radius = phone ? 34 : 46;
+        const aimX = midX + Math.cos(dog.orbit) * radius - W * 0.15;
+        const aimY = midY + Math.sin(dog.orbit) * radius * 0.45;
+        steer(dog, aimX, aimY, dt);
+        moving = true;
+      } else if (dog.mood === "chase") {
+        steer(dog, other.x, other.y, dt);
+        moving = Math.hypot(dog.vx, dog.vy) > 8;
+      } else if (!posed) {
+        const aim = aimPoint(dog);
+        const away = steer(dog, aim.x, aim.y, dt);
+        moving = away > 8 && Math.hypot(dog.vx, dog.vy) > 6;
+        if (!moving) {
+          dog.vx *= 0.82;
+          dog.vy *= 0.82;
+          dog.wait -= dt * 1000;
+          if (dog.wait <= 0 && dog.mood === "wander") {
+            pickSpot(dog, Math.random() < 0.5 ? other : null);
+            dog.wait = 420 + Math.random() * 900;
+          }
         }
       } else {
-        const step = speedFor(dog) * dt;
-        const reach = Math.min(1, step / away);
-        dog.x += dx * reach;
-        dog.y += dy * reach;
+        dog.vx *= 0.7;
+        dog.vy *= 0.7;
       }
 
-      clamp(dog);
-      const facing = dx < -2 ? -1 : dx > 2 ? 1 : Number(dog.el.dataset.facing || 1);
-      dog.el.dataset.facing = String(facing);
-      dog.el.classList.toggle("is-walking", moving);
-      dog.el.style.transform = `translate(${dog.x}px, ${dog.y}px) scaleX(${facing})`;
-    });
+      if (dog.mood === "play") {
+        dog.hopV -= (phone ? 1600 : 1450) * dt;
+        dog.hop += dog.hopV * dt;
+        if (dog.hop < 0) {
+          dog.hop = 0;
+          dog.hopV = phone ? 240 : 300;
+        }
+      } else if (dog.hop > 0) {
+        dog.hopV -= 1600 * dt;
+        dog.hop = Math.max(0, dog.hop + dog.hopV * dt);
+        if (dog.hop === 0) dog.hopV = 0;
+      }
 
-    requestAnimationFrame(tick);
+      clampDog(dog);
+
+      const speed = Math.hypot(dog.vx, dog.vy);
+      if (speed > 14) {
+        const want = dog.vx >= 0 ? 1 : -1;
+        if (dog.facing * want < 0) {
+          dog.facing += want * 7.5 * dt;
+        } else {
+          dog.facing += (want - dog.facing) * Math.min(1, 9 * dt);
+        }
+        dog.facing = Math.max(-1, Math.min(1, dog.facing));
+      }
+
+      const wantLean = Math.max(-8, Math.min(8, dog.vx * 0.035));
+      dog.lean += (wantLean - dog.lean) * Math.min(1, 6 * dt);
+
+      const gait = Math.max(0.34, 0.56 - speed / 820);
+      dog.el.style.setProperty("--gait", `${gait.toFixed(2)}s`);
+      dog.el.classList.toggle("is-walking", moving && !posed && dog.mood !== "play");
+
+      const { left, top } = view();
+      dog.el.style.transform =
+        `translate3d(${(left + dog.x).toFixed(1)}px, ${(top + dog.y - dog.hop).toFixed(1)}px, 0) ` +
+        `rotate(${dog.lean.toFixed(2)}deg) scaleX(${dog.facing.toFixed(3)})`;
+    });
   }
 
-  window.addEventListener("resize", () => pack.forEach(clamp));
-  requestAnimationFrame(tick);
+  function loop(now) {
+    tick(now);
+    raf = requestAnimationFrame(loop);
+  }
+
+  function resume() {
+    last = performance.now();
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(loop);
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) cancelAnimationFrame(raf);
+    else resume();
+  });
+  window.addEventListener("resize", () => pack.forEach(clampDog), { passive: true });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", () => pack.forEach(clampDog), { passive: true });
+    window.visualViewport.addEventListener("scroll", () => pack.forEach(clampDog), { passive: true });
+  }
+
+  resume();
 })();
