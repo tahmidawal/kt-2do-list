@@ -572,6 +572,176 @@ button.primary:disabled { opacity: 0.55; cursor: progress; }
   padding-top: 8px;
 }
 
+/* ---------------------------------------------------------- hanging-out puppies */
+
+.puppy-yard {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.puppy {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 124px;
+  height: 90px;
+  will-change: transform;
+  filter: drop-shadow(0 12px 10px rgba(15, 10, 9, 0.38));
+}
+
+.puppy svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+
+.puppy-ground {
+  fill: rgba(15, 10, 9, 0.28);
+  transform-box: view-box;
+  transform-origin: 90px 122px;
+  animation: puppy-shadow 0.7s ease-in-out infinite;
+}
+
+.puppy-figure {
+  transform-box: view-box;
+  transform-origin: 90px 80px;
+  animation: puppy-bob 0.7s ease-in-out infinite;
+}
+
+.puppy-tail {
+  transform-box: view-box;
+  transform-origin: 40px 62px;
+  animation: puppy-wag 0.28s ease-in-out infinite;
+}
+
+.puppy-poodle .puppy-tail {
+  transform-origin: 48px 56px;
+  animation-duration: 0.34s;
+}
+
+.puppy-head {
+  transform-box: view-box;
+  transform-origin: 142px 58px;
+  animation: puppy-look 3.4s ease-in-out infinite;
+}
+
+.ear {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: puppy-ear 1.1s ease-in-out infinite;
+}
+
+.topknot {
+  transform-box: fill-box;
+  transform-origin: 50% 80%;
+  animation: puppy-topknot 1.4s ease-in-out infinite;
+}
+
+.puppy-tongue {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  transform: scaleY(0.15);
+}
+
+.leg {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+}
+
+.puppy.is-walking .puppy-figure {
+  animation-duration: 0.36s;
+}
+
+.puppy.is-walking .leg-front-near,
+.puppy.is-walking .leg-back-far {
+  animation: puppy-step 0.38s ease-in-out infinite;
+}
+
+.puppy.is-walking .leg-front-far,
+.puppy.is-walking .leg-back-near {
+  animation: puppy-step 0.38s ease-in-out infinite reverse;
+}
+
+.puppy.is-playing .puppy-figure {
+  animation: puppy-play 0.42s ease-in-out infinite;
+}
+
+.puppy.is-playing .puppy-tongue {
+  animation: puppy-tongue 0.42s ease-in-out infinite;
+}
+
+.puppy.is-playing .puppy-tail {
+  animation-duration: 0.16s;
+}
+
+.puppy.is-bowing .puppy-head {
+  animation: puppy-bow 0.9s ease-in-out infinite;
+}
+
+.puppy.is-spinning .puppy-figure {
+  animation: puppy-spin 0.7s ease-in-out infinite;
+}
+
+@keyframes puppy-wag {
+  0%, 100% { transform: rotate(16deg); }
+  50% { transform: rotate(-28deg); }
+}
+
+@keyframes puppy-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes puppy-shadow {
+  0%, 100% { transform: scaleX(1); opacity: 0.9; }
+  50% { transform: scaleX(0.82); opacity: 0.55; }
+}
+
+@keyframes puppy-look {
+  0%, 40%, 100% { transform: rotate(0deg); }
+  55% { transform: rotate(-8deg); }
+  70% { transform: rotate(6deg); }
+}
+
+@keyframes puppy-ear {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(7deg); }
+}
+
+@keyframes puppy-topknot {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.06); }
+}
+
+@keyframes puppy-step {
+  0%, 100% { transform: rotate(18deg); }
+  50% { transform: rotate(-22deg); }
+}
+
+@keyframes puppy-play {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-18px) rotate(8deg); }
+}
+
+@keyframes puppy-tongue {
+  0%, 100% { transform: scaleY(0.2); }
+  40%, 70% { transform: scaleY(1); }
+}
+
+@keyframes puppy-bow {
+  0%, 100% { transform: rotate(0deg); }
+  45%, 60% { transform: rotate(22deg) translate(6px, 10px); }
+}
+
+@keyframes puppy-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 520px) {
   .page { padding: 32px 14px 48px; }
   .card { padding: 18px 16px; }

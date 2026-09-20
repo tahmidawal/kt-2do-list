@@ -479,3 +479,167 @@ async function boot() {
     say(error.message, true);
   }
 })();
+
+/* ------------------------------------------------------------ puppies */
+
+(function hangOut() {
+  const golden = $("puppyGolden");
+  const poodle = $("puppyPoodle");
+  if (!golden || !poodle) return;
+
+  const WIDTH = 124;
+  const HEIGHT = 90;
+
+  const pack = [
+    { el: golden, x: 24, y: 0, destX: 24, destY: 0, wait: 0, mood: "wander", moodUntil: 0 },
+    { el: poodle, x: 220, y: 0, destX: 220, destY: 0, wait: 400, mood: "wander", moodUntil: 0 },
+  ];
+
+  function bounds() {
+    return {
+      w: Math.max(160, window.innerWidth),
+      h: Math.max(160, window.innerHeight),
+    };
+  }
+
+  function clamp(dog) {
+    const { w, h } = bounds();
+    dog.x = Math.min(Math.max(8, dog.x), w - WIDTH - 8);
+    dog.y = Math.min(Math.max(8, dog.y), h - HEIGHT - 8);
+  }
+
+  function pickSpot(dog, toward) {
+    const { w, h } = bounds();
+    if (toward) {
+      dog.destX = toward.x + (Math.random() * 70 - 35);
+      dog.destY = toward.y + (Math.random() * 36 - 18);
+      clampDest(dog);
+      return;
+    }
+    const roll = Math.random();
+    if (roll < 0.6) {
+      dog.destX = 10 + Math.random() * (w - WIDTH - 20);
+      dog.destY = h - HEIGHT - 10 - Math.random() * Math.min(260, h * 0.42);
+    } else if (roll < 0.82) {
+      dog.destX = Math.random() < 0.5 ? 10 : w - WIDTH - 10;
+      dog.destY = 64 + Math.random() * (h - HEIGHT - 80);
+    } else {
+      dog.destX = 10 + Math.random() * (w - WIDTH - 20);
+      dog.destY = 48 + Math.random() * (h - HEIGHT - 64);
+    }
+    clampDest(dog);
+  }
+
+  function clampDest(dog) {
+    const { w, h } = bounds();
+    dog.destX = Math.min(Math.max(8, dog.destX), w - WIDTH - 8);
+    dog.destY = Math.min(Math.max(8, dog.destY), h - HEIGHT - 8);
+  }
+
+  function dist(a, b) {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    return Math.hypot(dx, dy);
+  }
+
+  function setMood(dog, mood, duration) {
+    dog.mood = mood;
+    dog.moodUntil = performance.now() + duration;
+    dog.el.classList.toggle("is-playing", mood === "play");
+    dog.el.classList.toggle("is-bowing", mood === "bow");
+    dog.el.classList.toggle("is-spinning", mood === "spin");
+  }
+
+  function chooseFun(now) {
+    const [a, b] = pack;
+    if (a.mood !== "wander" || b.mood !== "wander") return;
+    const together = dist(a, b) < 110;
+    const roll = Math.random();
+    if (together && roll < 0.55) {
+      const game = roll < 0.22 ? "spin" : roll < 0.38 ? "bow" : "play";
+      setMood(a, game, 1400 + Math.random() * 900);
+      setMood(b, game === "bow" ? "play" : game, 1400 + Math.random() * 900);
+      return;
+    }
+    if (roll < 0.18) {
+      const chaser = Math.random() < 0.5 ? a : b;
+      const chasee = chaser === a ? b : a;
+      setMood(chaser, "chase", 2200);
+      pickSpot(chaser, chasee);
+    } else if (roll < 0.28) {
+      pack.forEach((dog) => {
+        setMood(dog, "zoomies", 1600);
+        pickSpot(dog);
+      });
+    }
+  }
+
+  function speedFor(dog) {
+    if (dog.mood === "zoomies") return 280;
+    if (dog.mood === "chase") return 190;
+    return 110;
+  }
+
+  pack.forEach((dog, index) => {
+    const { h, w } = bounds();
+    dog.y = h - HEIGHT - 18;
+    dog.x = index === 0 ? 28 : Math.max(28, w - WIDTH - 48);
+    dog.destX = dog.x;
+    dog.destY = dog.y;
+    pickSpot(dog);
+  });
+
+  let last = performance.now();
+  let nextIdea = 0;
+
+  function tick(now) {
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+
+    if (now > nextIdea) {
+      chooseFun(now);
+      nextIdea = now + 900 + Math.random() * 1400;
+    }
+
+    pack.forEach((dog, index) => {
+      if (now > dog.moodUntil && dog.mood !== "wander") {
+        setMood(dog, "wander", 0);
+        pickSpot(dog);
+      }
+
+      if (dog.mood === "chase") {
+        pickSpot(dog, pack[1 - index]);
+      }
+
+      const dx = dog.destX - dog.x;
+      const dy = dog.destY - dog.y;
+      const away = Math.hypot(dx, dy);
+      const paused = dog.mood === "bow" || dog.mood === "spin" || dog.mood === "play";
+      const moving = away > 4 && !paused;
+
+      if (!moving) {
+        dog.wait -= dt * 1000;
+        if (dog.wait <= 0 && dog.mood === "wander") {
+          pickSpot(dog, Math.random() < 0.28 ? pack[1 - index] : null);
+          dog.wait = 280 + Math.random() * 900;
+        }
+      } else {
+        const step = speedFor(dog) * dt;
+        const reach = Math.min(1, step / away);
+        dog.x += dx * reach;
+        dog.y += dy * reach;
+      }
+
+      clamp(dog);
+      const facing = dx < -2 ? -1 : dx > 2 ? 1 : Number(dog.el.dataset.facing || 1);
+      dog.el.dataset.facing = String(facing);
+      dog.el.classList.toggle("is-walking", moving);
+      dog.el.style.transform = `translate(${dog.x}px, ${dog.y}px) scaleX(${facing})`;
+    });
+
+    requestAnimationFrame(tick);
+  }
+
+  window.addEventListener("resize", () => pack.forEach(clamp));
+  requestAnimationFrame(tick);
+})();
