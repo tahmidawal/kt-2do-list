@@ -592,16 +592,16 @@ button.primary:disabled { opacity: 0.55; cursor: progress; }
 }
 
 .puppy {
-  --gait: 0.52s;
-  --wag: 0.62s;
+  --gait: 0.56s;
+  --wag: 0.78s;
   position: absolute;
   left: 0;
   top: 0;
-  width: 132px;
-  height: 96px;
+  width: 138px;
+  height: 100px;
   will-change: transform;
-  opacity: 0.94;
-  filter: drop-shadow(0 16px 14px rgba(26, 18, 15, 0.22));
+  opacity: 0.9;
+  filter: drop-shadow(0 20px 18px rgba(64, 47, 42, 0.28));
 }
 
 .puppy svg {
@@ -612,11 +612,24 @@ button.primary:disabled { opacity: 0.55; cursor: progress; }
   shape-rendering: geometricPrecision;
 }
 
+.puppy-stroke {
+  stroke: #f4e6d6;
+  stroke-opacity: 0.28;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  paint-order: stroke fill;
+}
+
+.puppy-poodle .puppy-stroke {
+  stroke-opacity: 0.34;
+}
+
 .puppy-ground {
-  fill: rgba(26, 18, 15, 0.28);
+  fill: rgba(64, 47, 42, 0.32);
   transform-box: view-box;
   transform-origin: 90px 122px;
-  animation: puppy-shadow 1.15s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  animation: puppy-shadow 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 .puppy-poodle .puppy-ground { animation-delay: -0.4s; }
@@ -853,9 +866,9 @@ button.primary:disabled { opacity: 0.55; cursor: progress; }
   .field-row { gap: 10px; }
 
   .puppy {
-    width: 96px;
-    height: 70px;
+    width: 100px;
+    height: 74px;
     filter: none;
-    opacity: 0.93;
+    opacity: 0.88;
   }
 }

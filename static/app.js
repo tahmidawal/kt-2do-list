@@ -499,8 +499,8 @@ async function boot() {
 
   function size() {
     return {
-      w: golden.offsetWidth || (view().w <= 520 ? 96 : 132),
-      h: golden.offsetHeight || (view().w <= 520 ? 70 : 96),
+      w: golden.offsetWidth || (view().w <= 520 ? 100 : 138),
+      h: golden.offsetHeight || (view().w <= 520 ? 74 : 100),
     };
   }
 
