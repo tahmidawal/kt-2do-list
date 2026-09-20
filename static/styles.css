@@ -600,7 +600,8 @@ button.primary:disabled { opacity: 0.55; cursor: progress; }
   width: 132px;
   height: 96px;
   will-change: transform;
-  filter: drop-shadow(0 10px 8px rgba(15, 10, 9, 0.32));
+  opacity: 0.94;
+  filter: drop-shadow(0 16px 14px rgba(26, 18, 15, 0.22));
 }
 
 .puppy svg {
@@ -608,10 +609,11 @@ button.primary:disabled { opacity: 0.55; cursor: progress; }
   height: 100%;
   overflow: visible;
   display: block;
+  shape-rendering: geometricPrecision;
 }
 
 .puppy-ground {
-  fill: rgba(15, 10, 9, 0.22);
+  fill: rgba(26, 18, 15, 0.28);
   transform-box: view-box;
   transform-origin: 90px 122px;
   animation: puppy-shadow 1.15s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
@@ -854,5 +856,6 @@ button.primary:disabled { opacity: 0.55; cursor: progress; }
     width: 96px;
     height: 70px;
     filter: none;
+    opacity: 0.93;
   }
 }

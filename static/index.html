@@ -117,52 +117,72 @@
     <div class="puppy puppy-golden" id="puppyGolden">
       <svg viewBox="0 0 180 130" role="img">
         <title>Golden retriever</title>
-        <ellipse class="puppy-ground" cx="90" cy="122" rx="48" ry="6" />
+        <defs>
+          <linearGradient id="grCoat" x1="44" y1="36" x2="138" y2="102" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#ead4b0" />
+            <stop offset=".42" stop-color="#d0a074" />
+            <stop offset="1" stop-color="#9d7059" />
+          </linearGradient>
+          <linearGradient id="grLite" x1="86" y1="44" x2="128" y2="86" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#f4e6d6" stop-opacity=".7" />
+            <stop offset="1" stop-color="#d0a074" stop-opacity="0" />
+          </linearGradient>
+          <linearGradient id="grShade" x1="70" y1="58" x2="90" y2="98" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#9d7059" stop-opacity="0" />
+            <stop offset="1" stop-color="#5c4034" stop-opacity=".35" />
+          </linearGradient>
+          <linearGradient id="grEar" x1="122" y1="34" x2="138" y2="78" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#c18c76" />
+            <stop offset="1" stop-color="#7a4e3c" />
+          </linearGradient>
+        </defs>
+        <ellipse class="puppy-ground" cx="90" cy="122" rx="46" ry="6.5" />
         <g class="puppy-figure">
           <g class="puppy-tail">
-            <path fill="#d4924a" d="M40 62 C22 42 8 48 6 64 C4 74 16 78 28 70 C22 80 34 78 40 68 Z" />
-            <path fill="#e8b56a" d="M40 62 C26 46 14 50 12 62 C14 70 26 70 36 66 Z" />
+            <path fill="#9d7059" d="M44 64 C28 46 10 48 8 62 C6 72 18 80 30 74 C22 84 36 82 44 70 Z" />
+            <path fill="url(#grCoat)" d="M44 64 C30 50 16 50 14 62 C16 70 28 72 40 68 C36 76 42 74 44 66 Z" />
+            <path fill="#ead4b0" opacity=".45" d="M40 62 C30 52 22 54 20 62 C24 66 32 66 40 64 Z" />
           </g>
           <g class="leg leg-back-far">
-            <path fill="#c47d38" d="M58 72 l-4 40 a8 6 0 0 0 14 1 l-2 -41 z" />
-            <ellipse fill="#b56e30" cx="60" cy="116" rx="9" ry="5" />
+            <path fill="#8a5a44" d="M60 74 C58 90 56 104 58 114 C60 118 68 118 70 114 C70 100 68 86 66 74 Z" />
+            <path fill="#6f4636" d="M57 112 C56 116 60 119 67 118 C70 117 70 114 66 113 Z" />
           </g>
           <g class="leg leg-front-far">
-            <path fill="#c47d38" d="M108 74 l-6 38 a8 6 0 0 0 14 1 l0 -39 z" />
-            <ellipse fill="#b56e30" cx="110" cy="116" rx="9" ry="5" />
+            <path fill="#8a5a44" d="M108 74 C104 90 102 104 104 114 C106 118 114 118 116 114 C116 98 114 84 112 74 Z" />
+            <path fill="#6f4636" d="M103 112 C102 116 106 119 113 118 C116 117 116 114 112 113 Z" />
           </g>
           <g class="puppy-torso">
-            <ellipse fill="#d4924a" cx="88" cy="68" rx="50" ry="26" />
-            <ellipse fill="#e8b56a" cx="90" cy="62" rx="48" ry="24" />
-            <ellipse fill="#f0c57a" cx="102" cy="58" rx="22" ry="16" />
+            <path fill="url(#grCoat)" d="M50 72 C48 50 74 40 104 46 C126 51 136 60 134 74 C132 90 108 96 80 94 C58 92 50 84 50 72 Z" />
+            <path fill="url(#grLite)" d="M78 52 C96 46 118 52 126 64 C118 58 96 54 80 58 Z" />
+            <path fill="url(#grShade)" d="M56 78 C62 90 96 94 122 82 C108 90 78 92 60 84 Z" />
+            <path fill="#ead4b0" opacity=".35" d="M98 58 C110 54 122 60 124 70 C114 64 102 62 96 64 Z" />
           </g>
           <g class="leg leg-back-near">
-            <path fill="#e8b56a" d="M74 70 l4 42 a8 6 0 0 0 14 0 l-8 -42 z" />
-            <ellipse fill="#d4924a" cx="86" cy="116" rx="10" ry="5.5" />
+            <path fill="url(#grCoat)" d="M74 70 C76 88 78 104 82 114 C84 118 94 118 96 114 C92 96 86 80 80 70 Z" />
+            <path fill="#9d7059" d="M80 112 C79 116 84 120 93 119 C96 118 95 114 90 113 Z" />
+            <path fill="#c18c76" opacity=".4" d="M78 86 C82 96 88 104 90 112 C84 104 80 94 76 86 Z" />
           </g>
           <g class="leg leg-front-near">
-            <path fill="#e8b56a" d="M118 72 l6 40 a8 6 0 0 0 14 0 l-8 -40 z" />
-            <ellipse fill="#d4924a" cx="132" cy="116" rx="10" ry="5.5" />
+            <path fill="url(#grCoat)" d="M116 72 C120 90 124 104 128 114 C130 118 140 118 140 113 C134 96 126 82 120 72 Z" />
+            <path fill="#9d7059" d="M126 112 C125 116 130 120 138 118 C140 117 139 113 134 113 Z" />
           </g>
           <g class="puppy-head">
             <g class="ear ear-far">
-              <ellipse fill="#c47d38" cx="126" cy="58" rx="10" ry="18" transform="rotate(-18 126 58)" />
+              <path fill="#7a4e3c" d="M122 42 C116 50 114 64 120 74 C126 70 130 56 128 46 Z" />
             </g>
-            <ellipse fill="#e8b56a" cx="140" cy="50" rx="24" ry="21" />
-            <ellipse fill="#f0c57a" cx="146" cy="48" rx="16" ry="14" />
+            <path fill="url(#grCoat)" d="M124 50 C122 34 138 26 152 32 C164 38 172 48 168 58 C164 68 148 70 134 64 C126 60 124 56 124 50 Z" />
+            <path fill="url(#grLite)" d="M138 36 C148 32 160 38 164 48 C154 42 142 40 136 44 Z" />
             <g class="ear ear-near">
-              <ellipse fill="#d4924a" cx="132" cy="56" rx="11" ry="20" transform="rotate(12 132 56)" />
-              <ellipse fill="#c47d38" cx="133" cy="58" rx="6" ry="12" transform="rotate(12 133 58)" />
+              <path fill="url(#grEar)" d="M126 40 C120 52 122 70 132 76 C138 66 140 50 136 42 Z" />
+              <path fill="#9d7059" opacity=".45" d="M128 48 C126 58 128 68 134 72 C134 62 132 52 130 48 Z" />
             </g>
-            <ellipse fill="#e8b56a" cx="160" cy="56" rx="16" ry="11" />
-            <ellipse fill="#f3d09a" cx="162" cy="54" rx="12" ry="8" />
-            <ellipse fill="#2b2018" cx="173" cy="54" rx="4.2" ry="3.4" />
-            <ellipse fill="#fff3e6" cx="173.6" cy="53" rx="1.2" ry="0.8" />
-            <ellipse fill="#2b2018" cx="146" cy="46" rx="3.2" ry="3.6" />
-            <ellipse fill="#fff3e6" cx="147" cy="44.8" rx="1.1" ry="0.9" />
-            <path class="puppy-smile" fill="none" stroke="#2b2018" stroke-width="1.4" stroke-linecap="round"
-                  d="M158 62 q8 6 14 1" />
-            <ellipse class="puppy-tongue" fill="#e0897a" cx="166" cy="66" rx="4.5" ry="5" />
+            <path fill="#e4c39a" d="M154 50 C164 48 174 52 174 58 C174 64 164 64 154 60 C152 56 152 52 154 50 Z" />
+            <path fill="#c18c76" d="M170 54 C172 53 176 55 175.5 58 C174 60 170 59 169 57 Z" />
+            <ellipse fill="#2b2018" cx="145" cy="46" rx="2.6" ry="3" />
+            <ellipse fill="#f4e6d6" cx="145.8" cy="45" rx=".8" ry=".7" opacity=".85" />
+            <path fill="none" stroke="#9d7059" stroke-width="1.1" stroke-linecap="round" opacity=".55"
+                  d="M158 60 C162 63 168 62 172 58" />
+            <ellipse class="puppy-tongue" fill="#c18c76" cx="166" cy="64" rx="3.8" ry="4.2" />
           </g>
         </g>
       </svg>
@@ -171,55 +191,67 @@
     <div class="puppy puppy-poodle" id="puppyPoodle">
       <svg viewBox="0 0 180 130" role="img">
         <title>Poodle</title>
-        <ellipse class="puppy-ground" cx="92" cy="122" rx="42" ry="6" />
+        <defs>
+          <linearGradient id="pdWool" x1="40" y1="24" x2="150" y2="100" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#fbf3ea" />
+            <stop offset=".45" stop-color="#f4e6d6" />
+            <stop offset="1" stop-color="#d7c0ae" />
+          </linearGradient>
+          <linearGradient id="pdSkin" x1="150" y1="42" x2="176" y2="62" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#e6d0c0" />
+            <stop offset="1" stop-color="#c18c76" />
+          </linearGradient>
+          <linearGradient id="pdShade" x1="70" y1="58" x2="100" y2="86" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#c18c76" stop-opacity="0" />
+            <stop offset="1" stop-color="#9d7059" stop-opacity=".28" />
+          </linearGradient>
+        </defs>
+        <ellipse class="puppy-ground" cx="92" cy="122" rx="40" ry="6" />
         <g class="puppy-figure">
           <g class="puppy-tail">
-            <path fill="#dcc9b6" d="M48 56 C36 44 28 40 22 36" stroke="#dcc9b6" stroke-width="3.5" fill="none" />
-            <circle fill="#f6eee4" cx="20" cy="32" r="11" />
-            <circle fill="#ead9c8" cx="16" cy="28" r="5.5" />
+            <path fill="none" stroke="#d7c0ae" stroke-width="3" stroke-linecap="round" d="M50 56 C38 46 30 40 24 34" />
+            <path fill="url(#pdWool)" d="M28 22 C20 24 14 32 16 40 C18 48 28 50 34 44 C40 36 36 24 28 22 Z" />
+            <path fill="#fbf3ea" opacity=".5" d="M24 28 C22 32 24 38 28 40 C30 34 30 28 26 28 Z" />
           </g>
           <g class="leg leg-back-far">
-            <path fill="#dcc9b6" d="M62 70 v38" stroke="#dcc9b6" stroke-width="5" stroke-linecap="round" />
-            <circle fill="#ead9c8" cx="62" cy="112" r="8" />
+            <path fill="#d7c0ae" d="M62 72 C61 90 60 104 61 114" stroke="#d7c0ae" stroke-width="4.2" stroke-linecap="round" />
+            <path fill="url(#pdWool)" d="M54 108 C52 114 56 120 64 120 C70 120 72 114 68 110 C64 106 58 106 54 108 Z" />
           </g>
           <g class="leg leg-front-far">
-            <path fill="#dcc9b6" d="M112 72 v36" stroke="#dcc9b6" stroke-width="5" stroke-linecap="round" />
-            <circle fill="#ead9c8" cx="112" cy="112" r="8" />
+            <path fill="#d7c0ae" d="M112 72 C110 90 110 104 111 114" stroke="#d7c0ae" stroke-width="4.2" stroke-linecap="round" />
+            <path fill="url(#pdWool)" d="M104 108 C102 114 106 120 114 120 C120 120 122 114 118 110 C114 106 108 106 104 108 Z" />
           </g>
           <g class="puppy-torso">
-            <circle fill="#f6eee4" cx="62" cy="64" r="17" />
-            <ellipse fill="#ead9c8" cx="84" cy="66" rx="30" ry="13" />
-            <ellipse fill="#dcc9b6" cx="84" cy="70" rx="26" ry="9" />
-            <circle fill="#f6eee4" cx="112" cy="60" r="18" />
-            <circle fill="#ead9c8" cx="118" cy="54" r="8" />
+            <path fill="url(#pdWool)" d="M46 66 C42 52 54 44 68 48 C76 36 96 40 100 54 C118 48 132 58 126 72 C122 84 96 90 72 86 C54 84 46 76 46 66 Z" />
+            <path fill="url(#pdShade)" d="M62 74 C74 84 108 84 124 72 C110 80 80 82 64 76 Z" />
+            <path fill="#e6d0c0" d="M78 62 C86 58 108 60 116 68 C108 70 90 70 80 66 Z" />
+            <path fill="#fbf3ea" opacity=".45" d="M96 50 C108 48 120 56 122 64 C112 56 100 52 94 54 Z" />
           </g>
           <g class="leg leg-back-near">
-            <path d="M74 72 v40" stroke="#dcc9b6" stroke-width="5.5" stroke-linecap="round" />
-            <circle fill="#f6eee4" cx="74" cy="114" r="9" />
+            <path fill="#d7c0ae" d="M74 72 C74 90 74 106 76 116" stroke="#d7c0ae" stroke-width="4.6" stroke-linecap="round" />
+            <path fill="url(#pdWool)" d="M68 110 C66 116 70 122 80 122 C88 122 90 116 86 112 C82 108 72 106 68 110 Z" />
           </g>
           <g class="leg leg-front-near">
-            <path d="M122 70 v42" stroke="#dcc9b6" stroke-width="5.5" stroke-linecap="round" />
-            <circle fill="#f6eee4" cx="124" cy="114" r="9" />
+            <path fill="#d7c0ae" d="M122 70 C124 90 126 106 128 116" stroke="#d7c0ae" stroke-width="4.6" stroke-linecap="round" />
+            <path fill="url(#pdWool)" d="M120 110 C118 116 122 122 132 122 C140 122 142 116 138 112 C134 108 124 106 120 110 Z" />
           </g>
           <g class="puppy-head">
             <g class="ear ear-far">
-              <ellipse fill="#ead9c8" cx="128" cy="58" rx="9" ry="16" />
+              <path fill="#e6d0c0" d="M126 44 C122 54 124 68 132 72 C136 62 136 50 132 44 Z" />
             </g>
-            <circle fill="#f6eee4" cx="142" cy="42" r="20" />
-            <circle class="topknot" fill="#fff8f0" cx="142" cy="22" r="11" />
-            <circle fill="#ead9c8" cx="136" cy="38" r="7" />
+            <path fill="url(#pdWool)" d="M124 44 C122 26 136 16 150 22 C164 28 170 44 160 54 C154 60 138 60 128 52 C124 50 124 46 124 44 Z" />
+            <path class="topknot" fill="#fbf3ea" d="M136 14 C128 18 126 28 132 34 C140 22 152 22 156 30 C160 22 152 10 140 12 C138 12 136 14 136 14 Z" />
             <g class="ear ear-near">
-              <ellipse fill="#e8c4a0" cx="134" cy="56" rx="10" ry="17" />
-              <ellipse fill="#f6eee4" cx="134" cy="50" rx="7" ry="10" />
+              <path fill="#c18c76" opacity=".55" d="M128 42 C122 54 126 70 136 74 C140 62 140 48 136 42 Z" />
+              <path fill="url(#pdWool)" d="M130 44 C126 54 128 66 136 70 C138 58 138 48 134 44 Z" />
             </g>
-            <ellipse fill="#dcc9b6" cx="162" cy="50" rx="14" ry="8" />
-            <ellipse fill="#2b2018" cx="174" cy="50" rx="3.6" ry="3" />
-            <ellipse fill="#fff3e6" cx="174.6" cy="49.2" rx="1" ry="0.7" />
-            <ellipse fill="#2b2018" cx="148" cy="40" rx="3" ry="3.4" />
-            <ellipse fill="#fff3e6" cx="148.8" cy="39" rx="1" ry="0.8" />
-            <path class="puppy-smile" fill="none" stroke="#2b2018" stroke-width="1.3" stroke-linecap="round"
-                  d="M160 56 q8 5 13 0" />
-            <ellipse class="puppy-tongue" fill="#e0897a" cx="168" cy="62" rx="4" ry="4.5" />
+            <path fill="url(#pdSkin)" d="M156 46 C166 44 176 48 176 54 C176 60 166 60 156 56 C154 52 154 48 156 46 Z" />
+            <path fill="#402f2a" d="M172 52 C174 51 177 53 176.5 56 C175 57 172 56 171 54 Z" />
+            <ellipse fill="#2b2018" cx="146" cy="40" rx="2.4" ry="2.8" />
+            <ellipse fill="#f4e6d6" cx="146.7" cy="39.2" rx=".7" ry=".6" opacity=".9" />
+            <path fill="none" stroke="#c18c76" stroke-width="1" stroke-linecap="round" opacity=".5"
+                  d="M160 56 C164 58 170 58 174 54" />
+            <ellipse class="puppy-tongue" fill="#c18c76" cx="168" cy="60" rx="3.4" ry="3.8" />
           </g>
         </g>
       </svg>
